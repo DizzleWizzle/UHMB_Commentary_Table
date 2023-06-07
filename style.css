@@ -1,0 +1,24 @@
+.qv-object-UHMB_Commentary_Table div.qv-object-content-container {
+	overflow: auto;
+}
+.qv-object-UHMB_Commentary_Table td,
+.qv-object-UHMB_Commentary_Table th {
+	border-top: 0px solid #fff;
+	border-bottom: 1px solid #ddd;
+	border-right: 1px solid #ddd;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	vertical-align: middle;
+	cursor: default;
+	font-size: 12px;
+}
+.qv-object-UHMB_Commentary_Table td.numeric {
+	text-align: center;
+}
+.qv-object-UHMB_Commentary_Table button {
+	width: 100%;
+}
+.qv-object-UHMB_Commentary_Table tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }

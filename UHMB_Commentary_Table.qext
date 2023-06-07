@@ -1,0 +1,20 @@
+{
+    "name": "UHMB_Commentary_Table",
+    "description": "Table visualization template",
+    "icon": "table",
+    "type": "visualization",
+    "version": "1.0.0",
+    "author": "",
+    "homepage": "",
+    "keywords": "qlik-sense, visualization",
+    "license": "",
+    "repository": "",
+	"bundle": {
+        "id": "UHMB-bundle",
+        "name": "UHMB extensions",
+        "description": "This is a set of extensions built in-house at UHMB"
+    },
+    "dependencies": {
+        "qlik-sense": ">=3.0.x"
+    }
+}
