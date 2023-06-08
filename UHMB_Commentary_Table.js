@@ -14,6 +14,9 @@ define(["qlik", "jquery", "text!./style.css"], function (qlik, $, cssContent) {
 				if (!isNaN(cell.qNum)) {
 					html += "class='numeric'";
 				}
+				if (key == 0){
+					html += " style='font-weight: bold;'"
+				}
 				html += '>' + cell.qText + '</td>';
 			});
 			html += '</tr>';
@@ -145,7 +148,33 @@ define(["qlik", "jquery", "text!./style.css"], function (qlik, $, cssContent) {
 
 						}
 					}
-				},
+				},abouttxt: {
+					label: "About",
+					type: "items",
+					items: {
+						abouttxt2: {
+							label: "About",
+							type: "items",
+							items: {
+								aboutt: {
+									component: "text",
+									label: "UHMB Commenary Display Extension developed by Dale Wright"
+								},
+								about2: {
+									component: "link",
+									label: "CSS Font Family Documentation",
+									url:"https://developer.mozilla.org/en-US/docs/Web/CSS/font-family#examples"
+
+								},
+								about3: {
+									component: "link",
+									label: "GitHub for Extension",
+									url: "https://github.com/DizzleWizzle/UHMB_Commentary_Table"
+								}
+							}
+						}
+					}
+				}
 			}
 		},
 		snapshot: {
