@@ -2,10 +2,19 @@
 define(["qlik", "jquery", "text!./style.css"], function (qlik, $, cssContent) {
 	'use strict';
 	$("<style>").html(cssContent).appendTo("head");
-	function createRows(rows, dimensionInfo) {
+	function createRows(rows, dimensionInfo,layout) {
 		var html = "";
-		rows.forEach(function (row) {
-			html += '<tr>';
+		rows.forEach(function (row, rowindex) {
+			html += '<tr';
+			if (layout.DefaultFontFlag == false) {
+				if (rowindex % 2 == 0) {
+					html += ` style = "background-color: ${layout.CustomBodyColourEvenRow.color};"`;
+				} else {
+					html += ` style = "background-color: ${layout.CustomBodyColourOddRow.color};"`;
+				}
+			}
+
+			html += '>';
 			row.forEach(function (cell, key) {
 				if (cell.qIsOtherCell) {
 					cell.qText = dimensionInfo[key].othersLabel;
@@ -14,7 +23,7 @@ define(["qlik", "jquery", "text!./style.css"], function (qlik, $, cssContent) {
 				if (!isNaN(cell.qNum)) {
 					html += "class='numeric'";
 				}
-				if (key == 0){
+				if (key == 0) {
 					html += " style='font-weight: bold;'"
 				}
 				html += '>' + cell.qText + '</td>';
@@ -63,17 +72,17 @@ define(["qlik", "jquery", "text!./style.css"], function (qlik, $, cssContent) {
 							type: "items",
 							label: "Settings",
 							items: {
-								
+
 								DefaultFont: {
 									type: "boolean",
-									label: "Use Default Font/Size",
+									label: "Use Default Font/Size And Table colouring",
 									ref: "DefaultFontFlag",
 									defaultValue: true
 								},
 								CustomFontSizeHeader: {
 									ref: "CustFontSizeHeader",
 									type: "string",
-									label: "Header Custom Font Size",
+									label: "Header Font Size",
 									expression: "optional",
 									defaultValue: "14px",
 									show: function (data) {
@@ -84,7 +93,7 @@ define(["qlik", "jquery", "text!./style.css"], function (qlik, $, cssContent) {
 								CustomFontFamilyHeader: {
 									ref: "CustomFontFamilyHeader",
 									type: "string",
-									label: "Header Custom Font Family",
+									label: "Header  Font Family (CSS)",
 									expression: "optional",
 									defaultValue: "Arial, Helvetica, sans-serif",
 									show: function (data) {
@@ -93,11 +102,11 @@ define(["qlik", "jquery", "text!./style.css"], function (qlik, $, cssContent) {
 
 								},
 								CustomFontColHeader: {
-									label: "Header Custom Colour",
+									label: "Header Text Colour",
 									component: "color-picker",
 									ref: "CustomFontColHeader",
 									type: "object",
-	
+
 									defaultValue: {
 										color: "#ffffff",
 										index: "-1"
@@ -109,7 +118,7 @@ define(["qlik", "jquery", "text!./style.css"], function (qlik, $, cssContent) {
 								CustomFontSizeBody: {
 									ref: "CustFontSizeBody",
 									type: "string",
-									label: "Body Custom Font Size (CSS)",
+									label: "Body Font Size (CSS)",
 									expression: "optional",
 									defaultValue: "14px",
 									show: function (data) {
@@ -120,7 +129,7 @@ define(["qlik", "jquery", "text!./style.css"], function (qlik, $, cssContent) {
 								CustomFontFamilyBody: {
 									ref: "CustomFontFamilyBody",
 									type: "string",
-									label: "Body Custom Font Family (CSS)",
+									label: "Body Font Family (CSS)",
 									expression: "optional",
 									defaultValue: "Arial, Helvetica, sans-serif",
 									show: function (data) {
@@ -129,13 +138,39 @@ define(["qlik", "jquery", "text!./style.css"], function (qlik, $, cssContent) {
 
 								},
 								CustomFontColBody: {
-									label: "Body Custom Colour",
+									label: "Body Text Colour",
 									component: "color-picker",
 									ref: "CustomFontColBody",
 									type: "object",
-	
+
 									defaultValue: {
 										color: "#ffffff",
+										index: "-1"
+									},
+									show: function (data) {
+										return !data.DefaultFontFlag;
+									}
+								},CustomBodyColourEvenRow: {
+									label: "Table Row Colour (Even Rows)",
+									component: "color-picker",
+									ref: "CustomBodyColourEvenRow",
+									type: "object",
+
+									defaultValue: {
+										color: "#CFD5EA",
+										index: "-1"
+									},
+									show: function (data) {
+										return !data.DefaultFontFlag;
+									}
+								},CustomBodyColourOddRow: {
+									label: "Table Row Colour (Odd Rows)",
+									component: "color-picker",
+									ref: "CustomBodyColourOddRow",
+									type: "object",
+
+									defaultValue: {
+										color: "#E9EBF5",
 										index: "-1"
 									},
 									show: function (data) {
@@ -144,11 +179,11 @@ define(["qlik", "jquery", "text!./style.css"], function (qlik, $, cssContent) {
 								}
 
 							}
-						
+
 
 						}
 					}
-				},abouttxt: {
+				}, abouttxt: {
 					label: "About",
 					type: "items",
 					items: {
@@ -158,12 +193,12 @@ define(["qlik", "jquery", "text!./style.css"], function (qlik, $, cssContent) {
 							items: {
 								aboutt: {
 									component: "text",
-									label: "UHMB Commenary Display Extension developed by Dale Wright"
+									label: "UHMB Commentary Display Extension developed by Dale Wright"
 								},
 								about2: {
 									component: "link",
 									label: "CSS Font Family Documentation",
-									url:"https://developer.mozilla.org/en-US/docs/Web/CSS/font-family#examples"
+									url: "https://developer.mozilla.org/en-US/docs/Web/CSS/font-family#examples"
 
 								},
 								about3: {
@@ -182,14 +217,16 @@ define(["qlik", "jquery", "text!./style.css"], function (qlik, $, cssContent) {
 		},
 		paint: function ($element, layout) {
 			var defFont = layout.DefaultFontFlag;
-			var HeaderStyle= '';
+			var HeaderStyle = '';
 			var BodyStyle = '';
-			if(defFont == false){
+			var HeaderColour = '';
+			if (defFont == false) {
 				HeaderStyle = `style = "font-size:${layout.CustFontSizeHeader}; font-family:${layout.CustomFontFamilyHeader};color: ${layout.CustomFontColHeader.color};"`;
 				BodyStyle = `style = "font-size:${layout.CustFontSizeBody}; font-family:${layout.CustomFontFamilyBody};color: ${layout.CustomFontColBody.color};"`;
+				HeaderColour = ` style = "background-color: ${layout.CustomBodyColourEvenRow.color};"`;
 			}
 
-			var html = `<table ><thead ${HeaderStyle}><tr>`, self = this,
+			var html = `<table ><thead ${HeaderStyle}><tr${HeaderColour}>`, self = this,
 				morebutton = false,
 				hypercube = layout.qHyperCube,
 				rowcount = hypercube.qDataPages[0].qMatrix.length,
@@ -204,7 +241,7 @@ define(["qlik", "jquery", "text!./style.css"], function (qlik, $, cssContent) {
 			});
 			html += `</tr></thead><tbody ${BodyStyle}>`;
 			//render data
-			html += createRows(hypercube.qDataPages[0].qMatrix, hypercube.qDimensionInfo);
+			html += createRows(hypercube.qDataPages[0].qMatrix, hypercube.qDimensionInfo,layout);
 			html += "</tbody></table>";
 			//add 'more...' button
 			if (hypercube.qSize.qcy > rowcount) {
