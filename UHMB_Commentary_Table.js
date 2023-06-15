@@ -24,7 +24,10 @@ define(["qlik", "jquery", "text!./style.css"], function (qlik, $, cssContent) {
 					html += "class='numeric'";
 				}
 				if (key == 0) {
-					html += " style='font-weight: bold;'"
+					html += " style='font-weight: bold;'";
+				}
+				else{
+					html += " class='TextCell'";
 				}
 				html += '>' + cell.qText + '</td>';
 			});
@@ -234,10 +237,10 @@ define(["qlik", "jquery", "text!./style.css"], function (qlik, $, cssContent) {
 			//render titles
 
 			hypercube.qDimensionInfo.forEach(function (cell) {
-				html += '<th>' + cell.qFallbackTitle + '</th>';
+				html += '<th class="MetricCell">' + cell.qFallbackTitle + '</th>';
 			});
 			hypercube.qMeasureInfo.forEach(function (cell) {
-				html += '<th>' + cell.qFallbackTitle + '</th>';
+				html += '<th class = "TextCell">' + cell.qFallbackTitle + '</th>';
 			});
 			html += `</tr></thead><tbody ${BodyStyle}>`;
 			//render data

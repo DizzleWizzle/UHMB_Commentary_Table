@@ -21,8 +21,14 @@
 }
 .qv-object-UHMB_Commentary_Table td{
 	text-align: left;
+	white-space: pre-wrap;
 }
-
+.qv-object-UHMB_Commentary_Table .TextCell{
+	width: calc((100% - 180px)/3);
+}
+.qv-object-UHMB_Commentary_Table .MetricCell{
+	width: 150px;	
+}
 .qv-object-UHMB_Commentary_Table button {
 	width: 100%;
 }
@@ -34,4 +40,5 @@
   }
   .qv-object-UHMB_Commentary_Table table {
 	width: 100%;
+	table-layout: fixed;
   }
